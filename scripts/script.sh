@@ -296,7 +296,7 @@ function installHANA()
   log "installHANA start"
 
   cd $SAPBITSDIR
-  /usr/bin/wget --quiet "https://raw.githubusercontent.com/1lomeno3/SAP-HANA-BICEP/master/hdbinst.cfg"
+  /usr/bin/wget --quiet "https://raw.githubusercontent.com/1lomeno3/sap-hana-bicep/main/scripts/hdbinst.cfg"
 
   myhost=`hostname`
   sedcmd1="s/REPLACE-WITH-HOSTNAME/$myhost/g"
