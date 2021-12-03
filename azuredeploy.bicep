@@ -39,9 +39,9 @@ param VMType string = 'Standard_E32s_v3 (256 GB)'
 param ExistingNetworkRG string = 'no'
 
 param HANAVNet string = 'HANAVNet'
-param HANAVNetCIDR string = '10.0.0.0/16'
+param HANAVNetCIDR string = '10.0.0.0/25'
 param HANASubnet string = 'defaultsubnet'
-param HANASubnetCIDR string = '10.0.0.1/24'
+param HANASubnetCIDR string = '10.0.0.0/26'
 
 @description('Whether to use public IP or not')
 @allowed([
