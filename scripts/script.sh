@@ -222,6 +222,10 @@ function createVolumes()
 
   fi  
 
+  mkfs.xfs /dev/backupvg/backuplv
+  mkfs.xfs /dev/datavg/datalv
+  mkfs.xfs /dev/logvg/loglv
+
   # mounting 
   mount -t xfs /dev/sharedvg/sharedlv /hana/shared
   mount -t xfs /dev/usrsapvg/usrsaplv /usr/sap

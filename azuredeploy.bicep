@@ -43,6 +43,13 @@ param HANAVNetCIDR string = '10.0.0.0/16'
 param HANASubnet string = 'defaultsubnet'
 param HANASubnetCIDR string = '10.0.0.1/24'
 
+@description('Whether to use public IP or not')
+@allowed([
+  'yes'
+  'no'
+])
+param PublicIP string = 'yes'
+
 @description('URI where SAP bits are uploaded')
 param SAPstorage string
 
@@ -88,8 +95,8 @@ resource vnet 'Microsoft.Network/virtualNetworks@2016-09-01' = if (ExistingNetwo
   }
 }
 
-module smallVM 'modules/small.bicep' = if ((VMSize == 'Standard_DS14_v2') || (VMSize == 'Standard_E16s_v3') || (VMSize == 'Standard_E20ds_v4') || (VMSize == 'Standard_M32ts') || (VMSize == 'Standard_E32s_v3') || (VMSize == 'Standard_E48ds_v4') || (VMSize == 'Standard_E64s_v3') || (VMSize == 'Standard_M64ls')) {
-  name: 'SmallLinkedTemplate${VMName}'
+module smallVM 'modules/small.bicep' = if (VMSize == 'Standard_DS14_v2' || VMSize == 'Standard_E16s_v3' || VMSize == 'Standard_E20ds_v4' || VMSize == 'Standard_M32ts' || VMSize == 'Standard_E32s_v3' || VMSize == 'Standard_E48ds_v4' || VMSize == 'Standard_E64s_v3' || VMSize == 'Standard_M64ls') {
+  name: 'smallbicep'
   params: {
     HANAVersion: HANAVersion
     HANASID: HANASID
@@ -99,6 +106,7 @@ module smallVM 'modules/small.bicep' = if ((VMSize == 'Standard_DS14_v2') || (VM
     SAPstorage: SAPstorage
     SAStoken: SAStoken
     HANASubnetRef: HANASubnetRef
+    PublicIP: PublicIP
     OperatingSystem: OperatingSystem
     VMUserName: VMUserName
     VMPassword: VMPassword   

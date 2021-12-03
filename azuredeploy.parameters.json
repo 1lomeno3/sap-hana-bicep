@@ -9,7 +9,7 @@
             "value":  "JLT"
         },
         "VMName": {
-            "value": "hanaarmvm"
+            "value": "hanavm"
         },
         "VMType": {
             "value": "Standard_E32s_v3 (256 GB)"
@@ -32,7 +32,7 @@
         "VMPassword": {
             "reference": {
                 "keyVault": {
-                "id": "/subscriptions/53495674-8c17-4e58-97e8-a0b0a0ba659d/resourceGroups/mySAPRG/providers/Microsoft.KeyVault/vaults/mySAPKeyVault"
+                    "id": "/subscriptions/53495674-8c17-4e58-97e8-a0b0a0ba659d/resourceGroups/mySAPRG/providers/Microsoft.KeyVault/vaults/mySAPKeyVault"
                 },
                 "secretName": "myVMPassword"
               }

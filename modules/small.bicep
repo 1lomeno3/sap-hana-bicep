@@ -6,6 +6,8 @@ param VMSize string
 param SAPstorage string
 param SAStoken string
 param HANASubnetRef string
+param PublicIP string
+param DNSPrefix string = toLower('${VMName}-${uniqueString(resourceGroup().id, VMName)}')
 param VMUserName string
 param VMPassword string
 param OperatingSystem string
@@ -15,6 +17,20 @@ var OperatingSystemSpec = {
   imagePublisher: (contains(OperatingSystem, 'SLES') ? 'SUSE' : 'RedHat')
   imageOffer: (contains(OperatingSystem, 'SLES') ? (contains(OperatingSystem, 'SP5') ? 'sles-sap-12-sp5' : 'sles-sap-15-sp2') : 'RHEL-SAP-HANA')
   sku: 'gen2'
+}
+
+resource pip 'Microsoft.Network/publicIPAddresses@2021-02-01' = if (PublicIP == 'yes') {
+  name: '${VMName}-pip'
+  location: resourceGroup().location
+  sku: {
+    name: 'Basic'
+  }
+  properties: {
+    publicIPAllocationMethod: 'Dynamic'
+    dnsSettings: {
+      domainNameLabel: DNSPrefix
+    }
+  }
 }
 
 resource nic 'Microsoft.Network/networkInterfaces@2020-11-01' = {
@@ -27,6 +43,9 @@ resource nic 'Microsoft.Network/networkInterfaces@2020-11-01' = {
         name: 'ipconfig1'
         properties: {
           privateIPAllocationMethod: 'Dynamic'
+          publicIPAddress: {
+            id: pip.id
+          }
           subnet: {
             id: HANASubnetRef
           }
@@ -168,10 +187,12 @@ resource script 'Microsoft.Compute/virtualMachines/extensions@2020-06-01' = {
       fileUris: [
         'https://raw.githubusercontent.com/1lomeno3/sap-hana-bicep/main/scripts/script.sh'
       ]
-      commandToExecute: 'sh allvmsizes.sh "${HANAVersion}" "${HANASID}" "${HANANumber}" "${VMSize}" "${SAPstorage}" "${SAStoken}" "${VMUserName}" "${VMPassword}"'
+      commandToExecute: 'sh script.sh "${HANAVersion}" "${HANASID}" "${HANANumber}" "${VMSize}" "${SAPstorage}" "${SAStoken}" "${VMUserName}" "${VMPassword}"'
     }
   }
   dependsOn: [
     hanavm
   ]
 }
+
+output hostname string = PublicIP == 'yes' ? pip.properties.dnsSettings.fqdn : nic.properties.ipConfigurations[0].properties.privateIPAddress
