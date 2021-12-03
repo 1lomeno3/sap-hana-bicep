@@ -231,7 +231,7 @@ function createVolumes()
   mount -t xfs /dev/usrsapvg/usrsaplv /usr/sap
   mount -t xfs /dev/backupvg/backuplv /hana/backup 
   mount -t xfs /dev/datavg/datalv /hana/data
-  mount -t xfs /dev/logvg/loglv /hana/log 
+  mount -t xfs /dev/logvg/loglv /hana/log
 
   echo "/dev/mapper/sharedvg-sharedlv /hana/shared xfs defaults 0 0" >> /etc/fstab
   echo "/dev/mapper/usrsapvg-usrsaplv /usr/sap xfs defaults 0 0" >> /etc/fstab
@@ -277,17 +277,17 @@ function prepareSAPBins()
   else
     if [ "${hanapackage}" = "SPS56" ]
     then
-      /usr/bin/wget -o SAPCAR --quiet $Uri/SapBits/SAPCAR${sas}
-      /usr/bin/wget -o IMDB_SERVER20_056_0-80002031.SAR --quiet $Uri/SapBits/IMDB_SERVER20_056_0-80002031.SAR${sas}
+      /usr/bin/wget -O SAPCAR --quiet $Uri/SapBits/SAPCAR${sas}
+      /usr/bin/wget -O IMDB_SERVER20_056_0-80002031.SAR --quiet $Uri/SapBits/IMDB_SERVER20_056_0-80002031.SAR${sas}
 
       chmod 777 SAPCAR
       ./SAPCAR -xvf IMDB_SERVER20_056_0-80002031.SAR
       ./SAPCAR -xvf IMDB_SERVER20_056_0-80002031.SAR SIGNATURE.SMF -manifest SIGNATURE.SMF
     else
-      /usr/bin/wget -o ${hanapackage}_part1.exe --quiet $Uri/SapBits/${hanapackage}_part1.exe${sas}
-      /usr/bin/wget -o ${hanapackage}_part2.rar --quiet $Uri/SapBits/${hanapackage}_part2.rar${sas}
-      /usr/bin/wget -o ${hanapackage}_part2.rar --quiet $Uri/SapBits/${hanapackage}_part3.rar${sas}
-      /usr/bin/wget -o ${hanapackage}_part2.rar --quiet $Uri/SapBits/${hanapackage}_part4.rar${sas}
+      /usr/bin/wget -O ${hanapackage}_part1.exe --quiet $Uri/SapBits/${hanapackage}_part1.exe${sas}
+      /usr/bin/wget -O ${hanapackage}_part2.rar --quiet $Uri/SapBits/${hanapackage}_part2.rar${sas}
+      /usr/bin/wget -O ${hanapackage}_part2.rar --quiet $Uri/SapBits/${hanapackage}_part3.rar${sas}
+      /usr/bin/wget -O ${hanapackage}_part2.rar --quiet $Uri/SapBits/${hanapackage}_part4.rar${sas}
       unrar  -o- x ${hanapackage}_part1.exe
     fi
   fi

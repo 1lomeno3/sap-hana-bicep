@@ -36,9 +36,9 @@ param VMName string = 'HANABicepTest'
 param VMType string = 'Standard_E32s_v3 (256 GB)'
 
 @description('Type in the name of the Resource Group for an existing network or leave no to use the same one')
-param ExistingNetworkResourceGroup string = 'no'
+param ExistingNetworkRG string = 'no'
 
-param HANAVNet string = 'myVNet'
+param HANAVNet string = 'HANAVNet'
 param HANAVNetCIDR string = '10.0.0.0/16'
 param HANASubnet string = 'defaultsubnet'
 param HANASubnetCIDR string = '10.0.0.1/24'
@@ -57,7 +57,7 @@ param SAPstorage string
 @secure()
 param SAStoken string
 
-param VMUserName string = 'jatretin'
+param VMUserName string = 'azureadmin'
 
 @secure()
 param VMPassword string
@@ -71,11 +71,11 @@ param OperatingSystem string = 'SLES for SAP 15 SP2'
 
 
 var VNetID = vnet.id
-var HANASubnetRef = ((ExistingNetworkResourceGroup == 'no') ? '${VNetID}/subnets/${HANASubnet}' : '${resourceId(ExistingNetworkResourceGroup, 'Microsoft.Network/virtualNetworks/', HANAVNet)}/subnets/${HANASubnet}')
+var HANASubnetRef = ((ExistingNetworkRG == 'no') ? '${VNetID}/subnets/${HANASubnet}' : '${resourceId(ExistingNetworkRG, 'Microsoft.Network/virtualNetworks/', HANAVNet)}/subnets/${HANASubnet}')
 var VMSizeArray = split(VMType, ' ')
 var VMSize = VMSizeArray[0]
 
-resource vnet 'Microsoft.Network/virtualNetworks@2016-09-01' = if (ExistingNetworkResourceGroup == 'no') {
+resource vnet 'Microsoft.Network/virtualNetworks@2016-09-01' = if (ExistingNetworkRG == 'no') {
   name: HANAVNet
   location: resourceGroup().location
   properties: {
