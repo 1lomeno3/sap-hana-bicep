@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# update OS, create all hana partitions depending on input parameter from ARM template and install SAP HANA
+# update OS, create all hana partitions depending on input parameter from bicep template and install SAP HANA
 # cat customscript.sh | base64 -w0
 #
 set -x
