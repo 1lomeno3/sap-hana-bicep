@@ -29,7 +29,8 @@ function setEnv()
   if [ "${HANAVER}" = "2.0 SPS02 REV20 (51052325)" ]; then hanapackage="51052325"; fi
   if [ "${HANAVER}" = "2.0 SPS03 REV30 (51053061)" ]; then hanapackage="51053061"; fi
   if [ "${HANAVER}" = "2.0 SPS04 REV40 (51053787)" ]; then hanapackage="51053787"; fi
-  if [ "${HANAVER}" = "2.0 SPS05 REV56" ]; then hanapackage="SPS56"; fi
+  if [ "${HANAVER}" = "2.0 SPS05 REV56" ]; then hanapackage="56"; fi
+  if [ "${HANAVER}" = "2.0 SPS06 REV60" ]; then hanapackage="60"; fi
 
    
   #get the VM size via the instance api
@@ -272,22 +273,22 @@ function prepareSAPBins()
 
   if [ "${hanapackage}" = "51053787" ]
   then 
-    /usr/bin/wget -o ${hanapackage}.ZIP --quiet $Uri/SapBits/${hanapackage}.ZIP${sas}
+    /usr/bin/wget -o ${hanapackage}.ZIP --quiet $Uri/${hanapackage}.ZIP${sas}
     unzip ${hanapackage}.ZIP  
   else
-    if [ "${hanapackage}" = "SPS56" ]
+    if [ "${hanapackage}" = "56" ] || ["${hanapackage}" = "60"]
     then
-      /usr/bin/wget -O SAPCAR --quiet $Uri/SapBits/SAPCAR${sas}
-      /usr/bin/wget -O IMDB_SERVER20_056_0-80002031.SAR --quiet $Uri/SapBits/IMDB_SERVER20_056_0-80002031.SAR${sas}
+      /usr/bin/wget -O SAPCAR --quiet $Uri/SAPCAR${sas}
+      /usr/bin/wget -O IMDB_SERVER20_0${hanapackge}_0-80002031.SAR --quiet $Uri/IMDB_SERVER20_056_0-80002031.SAR${sas}
 
       chmod 777 SAPCAR
-      ./SAPCAR -xvf IMDB_SERVER20_056_0-80002031.SAR
-      ./SAPCAR -xvf IMDB_SERVER20_056_0-80002031.SAR SIGNATURE.SMF -manifest SIGNATURE.SMF
+      ./SAPCAR -xvf IMDB_SERVER20_0${hanapackge}_0-80002031.SAR
+      ./SAPCAR -xvf IMDB_SERVER20_0${hanapackge}_0-80002031.SAR SIGNATURE.SMF -manifest SIGNATURE.SMF
     else
-      /usr/bin/wget -O ${hanapackage}_part1.exe --quiet $Uri/SapBits/${hanapackage}_part1.exe${sas}
-      /usr/bin/wget -O ${hanapackage}_part2.rar --quiet $Uri/SapBits/${hanapackage}_part2.rar${sas}
-      /usr/bin/wget -O ${hanapackage}_part2.rar --quiet $Uri/SapBits/${hanapackage}_part3.rar${sas}
-      /usr/bin/wget -O ${hanapackage}_part2.rar --quiet $Uri/SapBits/${hanapackage}_part4.rar${sas}
+      /usr/bin/wget -O ${hanapackage}_part1.exe --quiet $Uri/${hanapackage}_part1.exe${sas}
+      /usr/bin/wget -O ${hanapackage}_part2.rar --quiet $Uri/${hanapackage}_part2.rar${sas}
+      /usr/bin/wget -O ${hanapackage}_part2.rar --quiet $Uri/${hanapackage}_part3.rar${sas}
+      /usr/bin/wget -O ${hanapackage}_part2.rar --quiet $Uri/${hanapackage}_part4.rar${sas}
       unrar  -o- x ${hanapackage}_part1.exe
     fi
   fi
@@ -317,7 +318,7 @@ function installHANA()
   
   echo $VMIPADDR $VMNAME >> /etc/hosts
   
-  if [ "${hanapackage}" = "SPS56" ]
+  if [ "${hanapackage}" = "56" ] || ["${hanapackage}" = "60"]
   then
     /hana/data/sapbits/${hanapackage}/SAP_HANA_DATABASE/hdblcm -b --configfile /hana/data/sapbits/hdbinst-local.cfg
   else
