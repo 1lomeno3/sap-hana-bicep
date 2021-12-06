@@ -1,11 +1,16 @@
+targetScope='subscription'
+param resourceGroupName string = 'HANABicepRG'
+param resourceGroupLlocation string = 'westeurope'
+
 @allowed([
   '2.0 SPS01 REV10 (51052030)'
   '2.0 SPS02 REV20 (51052325)'
   '2.0 SPS03 REV30 (51053061)'
   '2.0 SPS04 REV40 (51053787)'
   '2.0 SPS05 REV56'
+  '2.0 SPS06 REV60'
 ])
-param HANAVersion string = '2.0 SPS05 REV56'
+param HANAVersion string = '2.0 SPS06 REV60'
 
 @minLength(3)
 @maxLength(3)
@@ -38,7 +43,7 @@ param VMType string = 'Standard_E32s_v3 (256 GB)'
 @description('Type in the name of the Resource Group for an existing network or leave no to use the same one')
 param ExistingNetworkRG string = 'no'
 
-param HANAVNet string = 'HANAVNet'
+param HANAVNet string = 'hanavnet'
 param HANAVNetCIDR string = '10.0.0.0/25'
 param HANASubnet string = 'defaultsubnet'
 param HANASubnetCIDR string = '10.0.0.0/26'
@@ -70,33 +75,31 @@ param VMPassword string
 param OperatingSystem string = 'SLES for SAP 15 SP2'
 
 
-var VNetID = vnet.id
-var HANASubnetRef = ((ExistingNetworkRG == 'no') ? '${VNetID}/subnets/${HANASubnet}' : '${resourceId(ExistingNetworkRG, 'Microsoft.Network/virtualNetworks/', HANAVNet)}/subnets/${HANASubnet}')
 var VMSizeArray = split(VMType, ' ')
 var VMSize = VMSizeArray[0]
 
-resource vnet 'Microsoft.Network/virtualNetworks@2016-09-01' = if (ExistingNetworkRG == 'no') {
-  name: HANAVNet
-  location: resourceGroup().location
-  properties: {
-    addressSpace: {
-      addressPrefixes: [
-        HANAVNetCIDR
-      ]
-    }
-    subnets: [
-      {
-        name: HANASubnet
-        properties: {
-          addressPrefix: HANASubnetCIDR
-        }
-      }
-    ]
+resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
+  name: resourceGroupName
+  location: resourceGroupLlocation
+}
+
+module network 'modules/network.bicep' = {
+  scope: rg
+  name: 'network'
+  params: {
+    VMName: VMName
+    PublicIP: PublicIP
+    ExistingNetworkRG: ExistingNetworkRG
+    HANAVNet: HANAVNet
+    HANAVNetCIDR: HANAVNetCIDR
+    HANASubnet: HANASubnet
+    HANASubnetCIDR: HANASubnetCIDR
   }
 }
 
-module smallVM 'modules/small.bicep' = if (VMSize == 'Standard_DS14_v2' || VMSize == 'Standard_E16s_v3' || VMSize == 'Standard_E20ds_v4' || VMSize == 'Standard_M32ts' || VMSize == 'Standard_E32s_v3' || VMSize == 'Standard_E48ds_v4' || VMSize == 'Standard_E64s_v3' || VMSize == 'Standard_M64ls') {
-  name: 'smallbicep'
+module vm 'modules/vm.bicep' = {
+  scope: rg
+  name: 'vm'
   params: {
     HANAVersion: HANAVersion
     HANASID: HANASID
@@ -105,10 +108,11 @@ module smallVM 'modules/small.bicep' = if (VMSize == 'Standard_DS14_v2' || VMSiz
     VMSize: VMSize
     SAPstorage: SAPstorage
     SAStoken: SAStoken
-    HANASubnetRef: HANASubnetRef
-    PublicIP: PublicIP
     OperatingSystem: OperatingSystem
     VMUserName: VMUserName
-    VMPassword: VMPassword   
+    VMPassword: VMPassword
+    nicID: network.outputs.nicId
   }
 }
+
+output finish string = network.outputs.hostname
