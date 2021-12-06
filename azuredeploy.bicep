@@ -1,4 +1,5 @@
 targetScope='subscription'
+
 param resourceGroupName string = 'HANABicepRG'
 param resourceGroupLlocation string = 'westeurope'
 
@@ -29,9 +30,11 @@ param VMName string = 'HANABicepTest'
   'Standard_E20ds_v4 (160 GB)'
   'Standard_M32ts (192 GB)'
   'Standard_E32s_v3 (256 GB)'
+  'Standard_M32ls (256 GB)'
   'Standard_E48ds_v4 (384 GB)'
   'Standard_E64s_v3 (432 GB)'
   'Standard_M64ls (512 GB)'
+  'Standard_M32dms_v2 (875 GB)'
   'Standard_M64s (1 TB)'
   'Standard_M64ms (1.7 TB)'
   'Standard_M128s (2 TB)'
@@ -75,9 +78,12 @@ param VMPassword string
 param OperatingSystem string = 'SLES for SAP 15 SP2'
 
 
+// variables
 var VMSizeArray = split(VMType, ' ')
 var VMSize = VMSizeArray[0]
 
+
+// deployment
 resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   name: resourceGroupName
   location: resourceGroupLlocation

@@ -1,8 +1,3 @@
-/* 
-  VM sizes: DS14_v2, E16s_v3, E20ds_v4, M32ts, E32s_v3, E48ds_v4, E64s_v3, M64ls
-  Disk config: os E6, shared E15, usrsap E6, backup E15, data 4xP6, log 2xP10
-*/
-
 param HANAVersion string
 param HANASID string
 param HANANumber string
@@ -21,7 +16,365 @@ var OperatingSystemSpec = {
   sku: 'gen2'
 }
 
-resource hanavm 'Microsoft.Compute/virtualMachines@2020-06-01' = if (VMSize == 'Standard_DS14_v2' || VMSize == 'Standard_E16s_v3' || VMSize == 'Standard_E20ds_v4' || VMSize == 'Standard_M32ts' || VMSize == 'Standard_E32s_v3' || VMSize == 'Standard_E48ds_v4' || VMSize == 'Standard_E64s_v3' || VMSize == 'Standard_M64ls') {
+var smallVMs = [
+  'Standard_DS14_v2'
+  'Standard_E16s_v3'
+  'Standard_E20ds_v4'
+  'Standard_E32s_v3'
+  'Standard_E48ds_v4'
+  'Standard_E64s_v3'
+]
+var mediumVMs = [
+  'Standard_M32ts'
+  'Standard_M32ls'
+]
+var largeVMs = [
+  'Standard_M64ls'
+  'Standard_M32dms_v2'
+  'Standard_M64s'
+]
+var extralargeVMs = [
+  'Standard_M64ms'
+  'Standard_M128s'
+  'Standard_M208s_v2'
+  'Standard_M128ms'
+]
+
+
+var smallDisks = [
+  {
+    lun: 0
+    name: '${VMName}-disk-shared'
+    createOption: 'Empty'
+    diskSizeGB: 128
+    managedDisk: {
+      storageAccountType: 'StandardSSD_LRS'
+    }          
+  }
+  {
+    lun: 1
+    name: '${VMName}-disk-sap'
+    createOption: 'Empty'
+    diskSizeGB: 64
+    managedDisk: {
+      storageAccountType: 'StandardSSD_LRS'
+    }          
+  }
+  {
+    lun: 2
+    name: '${VMName}-disk-backup'
+    createOption: 'Empty'
+    diskSizeGB: 256
+    managedDisk: {
+      storageAccountType: 'StandardSSD_LRS'
+    }          
+  }
+  {
+    lun: 3
+    name: '${VMName}-disk-data1'
+    createOption: 'Empty'
+    diskSizeGB: 64
+    managedDisk: {
+      storageAccountType: 'Premium_LRS'
+    }
+  }
+  {
+    lun: 4
+    name: '${VMName}-disk-data2'
+    createOption: 'Empty'
+    diskSizeGB: 64
+    managedDisk: {
+      storageAccountType: 'Premium_LRS'
+    }
+  }
+  {
+    lun: 5
+    name: '${VMName}-disk-data3'
+    createOption: 'Empty'
+    diskSizeGB: 64
+    managedDisk: {
+      storageAccountType: 'Premium_LRS'
+    }
+  }
+  {
+    lun: 6
+    name: '${VMName}-disk-data4'
+    createOption: 'Empty'
+    diskSizeGB: 64
+    managedDisk: {
+      storageAccountType: 'Premium_LRS'
+    }
+  }
+  {
+    lun: 7
+    name: '${VMName}-disk-log1'
+    createOption: 'Empty'
+    diskSizeGB: 64
+    managedDisk: {
+      storageAccountType: 'Premium_LRS'
+    }
+  }
+  {
+    lun: 8
+    name: '${VMName}-disk-log2'
+    createOption: 'Empty'
+    diskSizeGB: 64
+    managedDisk: {
+      storageAccountType: 'Premium_LRS'
+    }
+  }
+]
+var mediumDisks = [
+  {
+    lun: 0
+    name: '${VMName}-disk-shared'
+    createOption: 'Empty'
+    diskSizeGB: 256
+    managedDisk: {
+      storageAccountType: 'StandardSSD_LRS'
+    }          
+  }
+  {
+    lun: 1
+    name: '${VMName}-disk-sap'
+    createOption: 'Empty'
+    diskSizeGB: 64
+    managedDisk: {
+      storageAccountType: 'StandardSSD_LRS'
+    }          
+  }
+  {
+    lun: 2
+    name: '${VMName}-disk-backup'
+    createOption: 'Empty'
+    diskSizeGB: 256
+    managedDisk: {
+      storageAccountType: 'StandardSSD_LRS'
+    }          
+  }
+  {
+    lun: 3
+    name: '${VMName}-disk-data1'
+    createOption: 'Empty'
+    diskSizeGB: 64
+    managedDisk: {
+      storageAccountType: 'Premium_LRS'
+    }
+  }
+  {
+    lun: 4
+    name: '${VMName}-disk-data2'
+    createOption: 'Empty'
+    diskSizeGB: 64
+    managedDisk: {
+      storageAccountType: 'Premium_LRS'
+    }
+  }
+  {
+    lun: 5
+    name: '${VMName}-disk-data3'
+    createOption: 'Empty'
+    diskSizeGB: 64
+    managedDisk: {
+      storageAccountType: 'Premium_LRS'
+    }
+  }
+  {
+    lun: 6
+    name: '${VMName}-disk-data4'
+    createOption: 'Empty'
+    diskSizeGB: 64
+    managedDisk: {
+      storageAccountType: 'Premium_LRS'
+    }
+  }
+  {
+    lun: 7
+    name: '${VMName}-disk-log1'
+    createOption: 'Empty'
+    diskSizeGB: 64
+    managedDisk: {
+      storageAccountType: 'Premium_LRS'
+    }
+  }
+  {
+    lun: 8
+    name: '${VMName}-disk-log2'
+    createOption: 'Empty'
+    diskSizeGB: 64
+    managedDisk: {
+      storageAccountType: 'Premium_LRS'
+    }
+  }
+]
+var largeDisks = [
+  {
+    lun: 0
+    name: '${VMName}-disk-shared'
+    createOption: 'Empty'
+    diskSizeGB: 512
+    managedDisk: {
+      storageAccountType: 'StandardSSD_LRS'
+    }          
+  }
+  {
+    lun: 1
+    name: '${VMName}-disk-sap'
+    createOption: 'Empty'
+    diskSizeGB: 64
+    managedDisk: {
+      storageAccountType: 'StandardSSD_LRS'
+    }          
+  }
+  {
+    lun: 2
+    name: '${VMName}-disk-backup'
+    createOption: 'Empty'
+    diskSizeGB: 256
+    managedDisk: {
+      storageAccountType: 'StandardSSD_LRS'
+    }          
+  }
+  {
+    lun: 3
+    name: '${VMName}-disk-data1'
+    createOption: 'Empty'
+    diskSizeGB: 64
+    managedDisk: {
+      storageAccountType: 'Premium_LRS'
+    }
+  }
+  {
+    lun: 4
+    name: '${VMName}-disk-data2'
+    createOption: 'Empty'
+    diskSizeGB: 64
+    managedDisk: {
+      storageAccountType: 'Premium_LRS'
+    }
+  }
+  {
+    lun: 5
+    name: '${VMName}-disk-data3'
+    createOption: 'Empty'
+    diskSizeGB: 64
+    managedDisk: {
+      storageAccountType: 'Premium_LRS'
+    }
+  }
+  {
+    lun: 6
+    name: '${VMName}-disk-data4'
+    createOption: 'Empty'
+    diskSizeGB: 64
+    managedDisk: {
+      storageAccountType: 'Premium_LRS'
+    }
+  }
+  {
+    lun: 7
+    name: '${VMName}-disk-log1'
+    createOption: 'Empty'
+    diskSizeGB: 64
+    managedDisk: {
+      storageAccountType: 'Premium_LRS'
+    }
+  }
+  {
+    lun: 8
+    name: '${VMName}-disk-log2'
+    createOption: 'Empty'
+    diskSizeGB: 64
+    managedDisk: {
+      storageAccountType: 'Premium_LRS'
+    }
+  }
+]
+var extralargeDisks = [
+  {
+    lun: 0
+    name: '${VMName}-disk-shared'
+    createOption: 'Empty'
+    diskSizeGB: 512
+    managedDisk: {
+      storageAccountType: 'StandardSSD_LRS'
+    }          
+  }
+  {
+    lun: 1
+    name: '${VMName}-disk-sap'
+    createOption: 'Empty'
+    diskSizeGB: 64
+    managedDisk: {
+      storageAccountType: 'StandardSSD_LRS'
+    }          
+  }
+  {
+    lun: 2
+    name: '${VMName}-disk-backup'
+    createOption: 'Empty'
+    diskSizeGB: 256
+    managedDisk: {
+      storageAccountType: 'StandardSSD_LRS'
+    }          
+  }
+  {
+    lun: 3
+    name: '${VMName}-disk-data1'
+    createOption: 'Empty'
+    diskSizeGB: 64
+    managedDisk: {
+      storageAccountType: 'Premium_LRS'
+    }
+  }
+  {
+    lun: 4
+    name: '${VMName}-disk-data2'
+    createOption: 'Empty'
+    diskSizeGB: 64
+    managedDisk: {
+      storageAccountType: 'Premium_LRS'
+    }
+  }
+  {
+    lun: 5
+    name: '${VMName}-disk-data3'
+    createOption: 'Empty'
+    diskSizeGB: 64
+    managedDisk: {
+      storageAccountType: 'Premium_LRS'
+    }
+  }
+  {
+    lun: 6
+    name: '${VMName}-disk-data4'
+    createOption: 'Empty'
+    diskSizeGB: 64
+    managedDisk: {
+      storageAccountType: 'Premium_LRS'
+    }
+  }
+  {
+    lun: 7
+    name: '${VMName}-disk-log1'
+    createOption: 'Empty'
+    diskSizeGB: 64
+    managedDisk: {
+      storageAccountType: 'Premium_LRS'
+    }
+  }
+  {
+    lun: 8
+    name: '${VMName}-disk-log2'
+    createOption: 'Empty'
+    diskSizeGB: 64
+    managedDisk: {
+      storageAccountType: 'Premium_LRS'
+    }
+  }
+]
+
+resource hanavm 'Microsoft.Compute/virtualMachines@2020-06-01' = {
   name: VMName
   location: resourceGroup().location
   properties: {
@@ -54,89 +407,7 @@ resource hanavm 'Microsoft.Compute/virtualMachines@2020-06-01' = if (VMSize == '
           storageAccountType: 'StandardSSD_LRS'
         }
       }
-      dataDisks: [
-        {
-          lun: 0
-          name: '${VMName}-disk-shared'
-          createOption: 'Empty'
-          diskSizeGB: 256
-          managedDisk: {
-            storageAccountType: 'StandardSSD_LRS'
-          }          
-        }
-        {
-          lun: 1
-          name: '${VMName}-disk-sap'
-          createOption: 'Empty'
-          diskSizeGB: 64
-          managedDisk: {
-            storageAccountType: 'StandardSSD_LRS'
-          }          
-        }
-        {
-          lun: 2
-          name: '${VMName}-disk-backup'
-          createOption: 'Empty'
-          diskSizeGB: 256
-          managedDisk: {
-            storageAccountType: 'StandardSSD_LRS'
-          }          
-        }
-        {
-          lun: 3
-          name: '${VMName}-disk-data1'
-          createOption: 'Empty'
-          diskSizeGB: 64
-          managedDisk: {
-            storageAccountType: 'Premium_LRS'
-          }
-        }
-        {
-          lun: 4
-          name: '${VMName}-disk-data2'
-          createOption: 'Empty'
-          diskSizeGB: 64
-          managedDisk: {
-            storageAccountType: 'Premium_LRS'
-          }
-        }
-        {
-          lun: 5
-          name: '${VMName}-disk-data3'
-          createOption: 'Empty'
-          diskSizeGB: 64
-          managedDisk: {
-            storageAccountType: 'Premium_LRS'
-          }
-        }
-        {
-          lun: 6
-          name: '${VMName}-disk-data4'
-          createOption: 'Empty'
-          diskSizeGB: 64
-          managedDisk: {
-            storageAccountType: 'Premium_LRS'
-          }
-        }
-        {
-          lun: 7
-          name: '${VMName}-disk-log1'
-          createOption: 'Empty'
-          diskSizeGB: 64
-          managedDisk: {
-            storageAccountType: 'Premium_LRS'
-          }
-        }
-        {
-          lun: 8
-          name: '${VMName}-disk-log2'
-          createOption: 'Empty'
-          diskSizeGB: 64
-          managedDisk: {
-            storageAccountType: 'Premium_LRS'
-          }
-        }
-      ]
+      dataDisks: (contains(smallVMs, VMSize)) ? smallDisks : (contains(mediumVMs, VMSize)) ? mediumDisks : (contains(largeVMs, VMSize)) ? largeDisks : extralargeDisks
     }
   }
 }

@@ -5,9 +5,10 @@ param HANAVNetCIDR string
 param HANASubnet string
 param HANASubnetCIDR string 
 param PublicIP string
-param DNSPrefix string = toLower('${VMName}-${uniqueString(resourceGroup().id, VMName)}')
 
+var DNSPrefix = toLower('${VMName}-${uniqueString(resourceGroup().id, VMName)}')
 var HANASubnetRef = ((ExistingNetworkRG == 'no') ? '${vnet.id}/subnets/${HANASubnet}' : '${resourceId(ExistingNetworkRG, 'Microsoft.Network/virtualNetworks/', HANAVNet)}/subnets/${HANASubnet}')
+
 
 resource vnet 'Microsoft.Network/virtualNetworks@2016-09-01' = if (ExistingNetworkRG == 'no') {
   name: HANAVNet
@@ -66,5 +67,4 @@ resource nic 'Microsoft.Network/networkInterfaces@2020-11-01' = {
 }
 
 output nicId string = nic.id
-output hostname string = PublicIP == 'yes' ? pip.properties.dnsSettings.fqdn : nic.properties.ipConfigurations[0].properties.privateIPAddress
-
+output hostname string = (PublicIP == 'yes') ? pip.properties.dnsSettings.fqdn : nic.properties.ipConfigurations[0].properties.privateIPAddress
