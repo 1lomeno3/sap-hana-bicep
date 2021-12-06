@@ -109,7 +109,7 @@ function createVolumes()
   mkfs.xfs /dev/usrsapvg/usrsaplv
 
 
-  if [ $VMSIZE == "Standard_E16s_v3" ] || [ "$VMSIZE" == "Standard_E32s_v3" ] || [ "$VMSIZE" == "Standard_E64s_v3" ] || [ "$VMSIZE" == "Standard_GS5" ] || [ "$VMSIZE" == "Standard_M32ts" ] || [ "$VMSIZE" == "Standard_M32ls" ] || [ "$VMSIZE" == "Standard_M64ls" ] || [ $VMSIZE == "Standard_DS14_v2" ] ; then
+  if [ "$VMSIZE" == "Standard_E16s_v3" ] || [ "$VMSIZE" == "Standard_E32s_v3" ] || [ "$VMSIZE" == "Standard_E64s_v3" ] || [ "$VMSIZE" == "Standard_GS5" ] || [ "$VMSIZE" == "Standard_M32ts" ] || [ "$VMSIZE" == "Standard_M32ls" ] || [ "$VMSIZE" == "Standard_M64ls" ] || [ $VMSIZE == "Standard_DS14_v2" ] ; then
     #backup volume creation
     backupvglun="/dev/disk/azure/scsi1/lun2"
     vgcreate backupvg $backupvglun
@@ -276,7 +276,7 @@ function prepareSAPBins()
     /usr/bin/wget -o ${hanapackage}.ZIP --quiet $Uri/${hanapackage}.ZIP${sas}
     unzip ${hanapackage}.ZIP  
   else
-    if [ "${hanapackage}" = "56" ] || ["${hanapackage}" = "60"]
+    if [ "${hanapackage}" = "56" ] || [ "${hanapackage}" = "60" ]
     then
       /usr/bin/wget -O SAPCAR --quiet $Uri/SAPCAR${sas}
       /usr/bin/wget -O IMDB_SERVER20_0${hanapackge}_0-80002031.SAR --quiet $Uri/IMDB_SERVER20_056_0-80002031.SAR${sas}
