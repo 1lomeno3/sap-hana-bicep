@@ -279,11 +279,11 @@ function prepareSAPBins()
     if [ "${hanapackage}" = "56" ] || [ "${hanapackage}" = "60" ]
     then
       /usr/bin/wget -O SAPCAR --quiet $Uri/SAPCAR${sas}
-      /usr/bin/wget -O IMDB_SERVER20_0${hanapackge}_0-80002031.SAR --quiet $Uri/IMDB_SERVER20_056_0-80002031.SAR${sas}
+      /usr/bin/wget -O IMDB_SERVER20_0${hanapackage}_0-80002031.SAR --quiet $Uri/IMDB_SERVER20_0${hanapackage}_0-80002031.SAR${sas}
 
       chmod 777 SAPCAR
-      ./SAPCAR -xvf IMDB_SERVER20_0${hanapackge}_0-80002031.SAR
-      ./SAPCAR -xvf IMDB_SERVER20_0${hanapackge}_0-80002031.SAR SIGNATURE.SMF -manifest SIGNATURE.SMF
+      ./SAPCAR -xvf IMDB_SERVER20_0${hanapackage}_0-80002031.SAR
+      ./SAPCAR -xvf IMDB_SERVER20_0${hanapackage}_0-80002031.SAR SIGNATURE.SMF -manifest SIGNATURE.SMF
     else
       /usr/bin/wget -O ${hanapackage}_part1.exe --quiet $Uri/${hanapackage}_part1.exe${sas}
       /usr/bin/wget -O ${hanapackage}_part2.rar --quiet $Uri/${hanapackage}_part2.rar${sas}
