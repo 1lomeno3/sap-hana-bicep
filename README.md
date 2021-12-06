@@ -6,7 +6,9 @@ The repository is used to install SAP HANA on a single VM using the Bicep langua
 4. preparation for Azure backup with SAP HANA
 
 ## Deployment steps
-At this time (December 2021), there is no direct way to deploy Bicep files through Azure portal (as with ARM templates). However, we can use Azure CLI or PowerShell for the local deployment. Don't forget to download the media (SAP HANA server package + SAPCAR) and provide access to your storage account including the SAS token.
+At this time (December 2021), there is no direct way to deploy Bicep files through Azure portal (as with ARM templates). However, we can use Azure CLI or PowerShell for the local deployment.
+
+Don't forget to download the media (SAP HANA server package + SAPCAR) and provide access to your storage account including the SAS token.
 ```
 git clone https://github.com/1lomeno3/sap-hana-bicep.git
 cd sap-hana-bicep
