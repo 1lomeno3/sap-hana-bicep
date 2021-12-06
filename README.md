@@ -12,7 +12,7 @@ Don't forget to download the media (SAP HANA server package + SAPCAR) and provid
 ```
 git clone https://github.com/1lomeno3/sap-hana-bicep.git
 cd sap-hana-bicep
-az deployment sub create -l westeurope -f azuredeploy.bicep --parameters azuredeploy.parameters-newvnet.json
+az deployment sub create -l westeurope -f azuredeploy.bicep -p azuredeploy.parameters-newvnet.json
 ```
 
 ## Parameters
