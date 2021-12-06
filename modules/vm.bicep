@@ -40,7 +40,6 @@ var extralargeVMs = [
   'Standard_M128ms'
 ]
 
-
 var smallDisks = [
   {
     lun: 0

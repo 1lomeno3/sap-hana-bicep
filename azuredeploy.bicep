@@ -43,12 +43,12 @@ param VMName string = 'HANABicepTest'
 ])
 param VMType string = 'Standard_E32s_v3 (256 GB)'
 
-@description('Type in the name of the Resource Group for an existing network or leave no to use the same one')
+@description('Type in the name of the Resource Group for an existing network or leave no to create new one')
 param ExistingNetworkRG string = 'no'
 
 param HANAVNet string = 'hanavnet'
 param HANAVNetCIDR string = '10.0.0.0/25'
-param HANASubnet string = 'defaultsubnet'
+param HANASubnet string = 'hanasubnet'
 param HANASubnetCIDR string = '10.0.0.0/26'
 
 @description('Whether to use public IP or not')
@@ -68,12 +68,14 @@ param SAStoken string
 param VMUserName string = 'azureadmin'
 
 @secure()
+@minLength(6)
+@maxLength(72)
 param VMPassword string
 
 @allowed([
   'SLES for SAP 12 SP5'
   'SLES for SAP 15 SP2'
-  'RHEL 7.2 for SAP HANA - not working yet'
+  'RHEL for SAP 8.2 - not working yet'
 ])
 param OperatingSystem string = 'SLES for SAP 15 SP2'
 
