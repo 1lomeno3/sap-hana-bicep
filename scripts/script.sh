@@ -318,7 +318,7 @@ function installHANA()
   
   echo $VMIPADDR $VMNAME >> /etc/hosts
   
-  if [ "${hanapackage}" = "56" ] || ["${hanapackage}" = "60"]
+  if [ "${hanapackage}" = "56" ] || [ "${hanapackage}" = "60" ]
   then
     /hana/data/sapbits/${hanapackage}/SAP_HANA_DATABASE/hdblcm -b --configfile /hana/data/sapbits/hdbinst-local.cfg
   else
