@@ -20,22 +20,8 @@
         "HANAVNet": {
             "value": "HANAVNet"
         },
-        "SAPstorage": {
-            "value": "https://mysapstorageaccount.blob.core.windows.net/sapmedia"            
-        },
-        "SAStoken": {
-            "value": "?sv=2020-02-10&ss=b&srt=sco&sp=rltfx&se=2099-06-02T20:00:38Z&st=2021-06-02T12:00:38Z&spr=https&sig=h69AieiHLSWpZruwzP%2BK%2BAFmeOiTPpSwYZccd3p%2FQVI%3D"            
-        },
         "VMUserName": {
-            "value": "jatretin"
-        },
-        "VMPassword": {
-            "reference": {
-                "keyVault": {
-                    "id": "/subscriptions/53495674-8c17-4e58-97e8-a0b0a0ba659d/resourceGroups/mySAPRG/providers/Microsoft.KeyVault/vaults/mySAPKeyVault"
-                },
-                "secretName": "myVMPassword"
-              }
+            "value": "admin"
         },
         "OperatingSystem": {
             "value":  "SLES for SAP 15 SP2"
