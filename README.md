@@ -20,3 +20,9 @@ List of parameters which are not defined in the bicep file or in the parameter f
 - SAPStorage = URI of your storage account, like https://yourstorageaccount.blob.core.windows.net/sapmedia
 - SAStoken
 - VMPassword
+
+
+## Links
+https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/overview  
+https://docs.microsoft.com/en-us/learn/paths/fundamentals-bicep  
+https://github.com/Azure/bicep
