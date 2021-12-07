@@ -1,7 +1,7 @@
 targetScope='subscription'
 
 param resourceGroupName string = 'HANABicepRG'
-param resourceGroupLlocation string = 'westeurope'
+param resourceGroupLocation string = 'westeurope'
 
 @allowed([
   '2.0 SPS01 REV10 (51052030)'
@@ -88,7 +88,7 @@ var VMSize = VMSizeArray[0]
 // deployment
 resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   name: resourceGroupName
-  location: resourceGroupLlocation
+  location: resourceGroupLocation
 }
 
 module network 'modules/network.bicep' = {
