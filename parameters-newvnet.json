@@ -1,0 +1,30 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "HANAVersion": {
+            "value": "2.0 SPS05 REV56"
+        },
+        "HANASID": {
+            "value":  "JLT"
+        },
+        "VMName": {
+            "value": "hanavm"
+        },
+        "VMType": {
+            "value": "Standard_E32s_v3 (256 GB)"
+        },
+        "ExistingNetworkRG": {
+            "value": "no"
+        },
+        "HANAVNet": {
+            "value": "HANAVNet"
+        },
+        "VMUserName": {
+            "value": "admin"
+        },
+        "OperatingSystem": {
+            "value":  "SLES for SAP 15 SP2"
+        }
+    }
+}
