@@ -22,7 +22,7 @@ param HANASID string = 'AZR'
 param HANANumber string = '00'
 
 @maxLength(13)
-param VMName string = 'HANABicepTest'
+param VMName string = 'hanavm'
 
 @allowed([
   'Standard_DS14_v2 (112 GB, for B1)'
@@ -67,6 +67,7 @@ param SAStoken string
 
 param VMUserName string = 'azureadmin'
 
+@description('Password for VM and also for SAP HANA SYSTEM user')
 @secure()
 @minLength(6)
 @maxLength(72)
