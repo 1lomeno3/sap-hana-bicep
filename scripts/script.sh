@@ -114,24 +114,21 @@ function createVolumes()
   mkfs.xfs /dev/backupvg/backuplv
 
 
-  if [[ "${extrasmallVMs[*]}" =~ "${VMSIZE}" ]]; then
+  if [[ "${extrasmallVMs[*]}" =~ "${VMSIZE}" ]]
+  then
     
     #data volume creation
     datavg1lun="/dev/disk/azure/scsi1/lun3"
     datavg2lun="/dev/disk/azure/scsi1/lun4"
     datavg3lun="/dev/disk/azure/scsi1/lun5"
     vgcreate datavg $datavg1lun $datavg2lun $datavg3lun
-    PHYSVOLUMES=3
-    STRIPESIZE=256
-    lvcreate -i$PHYSVOLUMES -I$STRIPESIZE -l 100%FREE -n datalv datavg
+    lvcreate -i3 -I256 -l 100%FREE -n datalv datavg
 
     #log volume creation
     logvg1lun="/dev/disk/azure/scsi1/lun6"
     logvg2lun="/dev/disk/azure/scsi1/lun7"
     vgcreate logvg $logvg1lun $logvg2lun
-    PHYSVOLUMES=2
-    STRIPESIZE=64
-    lvcreate -i$PHYSVOLUMES -I$STRIPESIZE -l 100%FREE -n loglv logvg    
+    lvcreate -i2 -I64 -l 100%FREE -n loglv logvg    
 
   else
 
@@ -144,19 +141,14 @@ function createVolumes()
     datavg3lun="/dev/disk/azure/scsi1/lun5"
     datavg4lun="/dev/disk/azure/scsi1/lun6"
     vgcreate datavg $datavg1lun $datavg2lun $datavg3lun $datavg4lun
-    PHYSVOLUMES=4
-    STRIPESIZE=256
-    lvcreate -i$PHYSVOLUMES -I$STRIPESIZE -l 100%FREE -n datalv datavg
+    lvcreate -i4 -I256 -l 100%FREE -n datalv datavg
 
     #log volume creation
     logvg1lun="/dev/disk/azure/scsi1/lun7"
     logvg2lun="/dev/disk/azure/scsi1/lun8"
     logvg3lun="/dev/disk/azure/scsi1/lun9"
-    vgcreate logvg $logvg1lun $logvg2lun
-    PHYSVOLUMES=3
-    STRIPESIZE=64
-    lvcreate -i$PHYSVOLUMES -I$STRIPESIZE -l 100%FREE -n loglv logvg
-
+    vgcreate logvg $logvg1lun $logvg2lun $logvg3lun
+    lvcreate -i3 -I64 -l 100%FREE -n loglv logvg
   fi  
 
   mkfs.xfs /dev/datavg/datalv

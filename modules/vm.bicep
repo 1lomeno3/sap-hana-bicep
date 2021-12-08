@@ -117,12 +117,12 @@ var extrasmallDisks = [
     }
   }
 ]
-var smallDisks = [
+var disks = [
   {
     lun: 0
     name: '${VMName}-disk-shared'
     createOption: 'Empty'
-    diskSizeGB: 256
+    diskSizeGB: (contains(smallVMs, VMSize)) ? 256 : (contains(mediumVMs, VMSize)) ? 512 : 1024
     managedDisk: {
       storageAccountType: 'StandardSSD_LRS'
     }          
@@ -140,7 +140,7 @@ var smallDisks = [
     lun: 2
     name: '${VMName}-disk-backup'
     createOption: 'Empty'
-    diskSizeGB: 256
+    diskSizeGB: (contains(smallVMs, VMSize)) ? 256 : (contains(mediumVMs, VMSize)) ? 512 : 1024
     managedDisk: {
       storageAccountType: 'StandardSSD_LRS'
     }          
@@ -149,7 +149,7 @@ var smallDisks = [
     lun: 3
     name: '${VMName}-disk-data1'
     createOption: 'Empty'
-    diskSizeGB: 64
+    diskSizeGB: (contains(smallVMs, VMSize)) ? 64 : (contains(mediumVMs, VMSize)) ? 128 : (contains(largeVMs, VMSize)) ? 256 : 512
     managedDisk: {
       storageAccountType: 'Premium_LRS'
     }
@@ -158,7 +158,7 @@ var smallDisks = [
     lun: 4
     name: '${VMName}-disk-data2'
     createOption: 'Empty'
-    diskSizeGB: 64
+    diskSizeGB: (contains(smallVMs, VMSize)) ? 64 : (contains(mediumVMs, VMSize)) ? 128 : (contains(largeVMs, VMSize)) ? 256 : 512
     managedDisk: {
       storageAccountType: 'Premium_LRS'
     }
@@ -167,7 +167,7 @@ var smallDisks = [
     lun: 5
     name: '${VMName}-disk-data3'
     createOption: 'Empty'
-    diskSizeGB: 64
+    diskSizeGB: (contains(smallVMs, VMSize)) ? 64 : (contains(mediumVMs, VMSize)) ? 128 : (contains(largeVMs, VMSize)) ? 256 : 512
     managedDisk: {
       storageAccountType: 'Premium_LRS'
     }
@@ -176,7 +176,7 @@ var smallDisks = [
     lun: 6
     name: '${VMName}-disk-data4'
     createOption: 'Empty'
-    diskSizeGB: 64
+    diskSizeGB: (contains(smallVMs, VMSize)) ? 64 : (contains(mediumVMs, VMSize)) ? 128 : (contains(largeVMs, VMSize)) ? 256 : 512
     managedDisk: {
       storageAccountType: 'Premium_LRS'
     }
@@ -185,316 +185,31 @@ var smallDisks = [
     lun: 7
     name: '${VMName}-disk-log1'
     createOption: 'Empty'
-    diskSizeGB: 128
+    diskSizeGB: (contains(smallVMs, VMSize)) ? 128 : (contains(mediumVMs, VMSize)) ? 128 : 256
     managedDisk: {
       storageAccountType: 'Premium_LRS'
     }
-    writeAcceleratorEnabled: (contains('Standard_M', VMSize)) ? 'true' : 'false'
+    writeAcceleratorEnabled: (contains(VMSize, 'Standard_M')) ? 'true' : 'false'
   }
   {
     lun: 8
     name: '${VMName}-disk-log2'
     createOption: 'Empty'
-    diskSizeGB: 128
+    diskSizeGB: (contains(smallVMs, VMSize)) ? 128 : (contains(mediumVMs, VMSize)) ? 128 : 256
     managedDisk: {
       storageAccountType: 'Premium_LRS'
     }
-    writeAcceleratorEnabled: (contains('Standard_M', VMSize)) ? 'true' : 'false'
+    writeAcceleratorEnabled: (contains(VMSize, 'Standard_M')) ? 'true' : 'false'
   }
   {
     lun: 9
     name: '${VMName}-disk-log3'
     createOption: 'Empty'
-    diskSizeGB: 128
+    diskSizeGB: (contains(smallVMs, VMSize)) ? 128 : (contains(mediumVMs, VMSize)) ? 128 : 256
     managedDisk: {
       storageAccountType: 'Premium_LRS'
     }
-    writeAcceleratorEnabled: (contains('Standard_M', VMSize)) ? 'true' : 'false'
-  }
-]
-var mediumDisks = [
-  {
-    lun: 0
-    name: '${VMName}-disk-shared'
-    createOption: 'Empty'
-    diskSizeGB: 512
-    managedDisk: {
-      storageAccountType: 'StandardSSD_LRS'
-    }          
-  }
-  {
-    lun: 1
-    name: '${VMName}-disk-sap'
-    createOption: 'Empty'
-    diskSizeGB: 64
-    managedDisk: {
-      storageAccountType: 'StandardSSD_LRS'
-    }          
-  }
-  {
-    lun: 2
-    name: '${VMName}-disk-backup'
-    createOption: 'Empty'
-    diskSizeGB: 512
-    managedDisk: {
-      storageAccountType: 'StandardSSD_LRS'
-    }          
-  }
-  {
-    lun: 3
-    name: '${VMName}-disk-data1'
-    createOption: 'Empty'
-    diskSizeGB: 128
-    managedDisk: {
-      storageAccountType: 'Premium_LRS'
-    }
-  }
-  {
-    lun: 4
-    name: '${VMName}-disk-data2'
-    createOption: 'Empty'
-    diskSizeGB: 128
-    managedDisk: {
-      storageAccountType: 'Premium_LRS'
-    }
-  }
-  {
-    lun: 5
-    name: '${VMName}-disk-data3'
-    createOption: 'Empty'
-    diskSizeGB: 128
-    managedDisk: {
-      storageAccountType: 'Premium_LRS'
-    }
-  }
-  {
-    lun: 6
-    name: '${VMName}-disk-data4'
-    createOption: 'Empty'
-    diskSizeGB: 128
-    managedDisk: {
-      storageAccountType: 'Premium_LRS'
-    }
-  }
-  {
-    lun: 7
-    name: '${VMName}-disk-log1'
-    createOption: 'Empty'
-    diskSizeGB: 128
-    managedDisk: {
-      storageAccountType: 'Premium_LRS'
-    }
-    writeAcceleratorEnabled: (contains('Standard_M', VMSize)) ? 'true' : 'false'
-  }
-  {
-    lun: 8
-    name: '${VMName}-disk-log2'
-    createOption: 'Empty'
-    diskSizeGB: 128
-    managedDisk: {
-      storageAccountType: 'Premium_LRS'
-    }
-    writeAcceleratorEnabled: (contains('Standard_M', VMSize)) ? 'true' : 'false'
-  }
-  {
-    lun: 9
-    name: '${VMName}-disk-log3'
-    createOption: 'Empty'
-    diskSizeGB: 128
-    managedDisk: {
-      storageAccountType: 'Premium_LRS'
-    }
-    writeAcceleratorEnabled: (contains('Standard_M', VMSize)) ? 'true' : 'false'
-  }
-]
-var largeDisks = [
-  {
-    lun: 0
-    name: '${VMName}-disk-shared'
-    createOption: 'Empty'
-    diskSizeGB: 1024
-    managedDisk: {
-      storageAccountType: 'StandardSSD_LRS'
-    }          
-  }
-  {
-    lun: 1
-    name: '${VMName}-disk-sap'
-    createOption: 'Empty'
-    diskSizeGB: 64
-    managedDisk: {
-      storageAccountType: 'StandardSSD_LRS'
-    }          
-  }
-  {
-    lun: 2
-    name: '${VMName}-disk-backup'
-    createOption: 'Empty'
-    diskSizeGB: 512
-    managedDisk: {
-      storageAccountType: 'StandardSSD_LRS'
-    }          
-  }
-  {
-    lun: 3
-    name: '${VMName}-disk-data1'
-    createOption: 'Empty'
-    diskSizeGB: 256
-    managedDisk: {
-      storageAccountType: 'Premium_LRS'
-    }
-  }
-  {
-    lun: 4
-    name: '${VMName}-disk-data2'
-    createOption: 'Empty'
-    diskSizeGB: 256
-    managedDisk: {
-      storageAccountType: 'Premium_LRS'
-    }
-  }
-  {
-    lun: 5
-    name: '${VMName}-disk-data3'
-    createOption: 'Empty'
-    diskSizeGB: 256
-    managedDisk: {
-      storageAccountType: 'Premium_LRS'
-    }
-  }
-  {
-    lun: 6
-    name: '${VMName}-disk-data4'
-    createOption: 'Empty'
-    diskSizeGB: 256
-    managedDisk: {
-      storageAccountType: 'Premium_LRS'
-    }
-  }
-  {
-    lun: 7
-    name: '${VMName}-disk-log1'
-    createOption: 'Empty'
-    diskSizeGB: 256
-    managedDisk: {
-      storageAccountType: 'Premium_LRS'
-    }
-    writeAcceleratorEnabled: (contains('Standard_M', VMSize)) ? 'true' : 'false'
-  }
-  {
-    lun: 8
-    name: '${VMName}-disk-log2'
-    createOption: 'Empty'
-    diskSizeGB: 256
-    managedDisk: {
-      storageAccountType: 'Premium_LRS'
-    }
-    writeAcceleratorEnabled: (contains('Standard_M', VMSize)) ? 'true' : 'false'
-  }
-  {
-    lun: 9
-    name: '${VMName}-disk-log3'
-    createOption: 'Empty'
-    diskSizeGB: 256
-    managedDisk: {
-      storageAccountType: 'Premium_LRS'
-    }
-    writeAcceleratorEnabled: (contains('Standard_M', VMSize)) ? 'true' : 'false'
-  }
-]
-var extralargeDisks = [
-  {
-    lun: 0
-    name: '${VMName}-disk-shared'
-    createOption: 'Empty'
-    diskSizeGB: 1024
-    managedDisk: {
-      storageAccountType: 'StandardSSD_LRS'
-    }          
-  }
-  {
-    lun: 1
-    name: '${VMName}-disk-sap'
-    createOption: 'Empty'
-    diskSizeGB: 64
-    managedDisk: {
-      storageAccountType: 'StandardSSD_LRS'
-    }          
-  }
-  {
-    lun: 2
-    name: '${VMName}-disk-backup'
-    createOption: 'Empty'
-    diskSizeGB: 1024
-    managedDisk: {
-      storageAccountType: 'StandardSSD_LRS'
-    }          
-  }
-  {
-    lun: 3
-    name: '${VMName}-disk-data1'
-    createOption: 'Empty'
-    diskSizeGB: 512
-    managedDisk: {
-      storageAccountType: 'Premium_LRS'
-    }
-  }
-  {
-    lun: 4
-    name: '${VMName}-disk-data2'
-    createOption: 'Empty'
-    diskSizeGB: 512
-    managedDisk: {
-      storageAccountType: 'Premium_LRS'
-    }
-  }
-  {
-    lun: 5
-    name: '${VMName}-disk-data3'
-    createOption: 'Empty'
-    diskSizeGB: 512
-    managedDisk: {
-      storageAccountType: 'Premium_LRS'
-    }
-  }
-  {
-    lun: 6
-    name: '${VMName}-disk-data4'
-    createOption: 'Empty'
-    diskSizeGB: 512
-    managedDisk: {
-      storageAccountType: 'Premium_LRS'
-    }
-  }
-  {
-    lun: 7
-    name: '${VMName}-disk-log1'
-    createOption: 'Empty'
-    diskSizeGB: 256
-    managedDisk: {
-      storageAccountType: 'Premium_LRS'
-    }
-    writeAcceleratorEnabled: (contains('Standard_M', VMSize)) ? 'true' : 'false'
-  }
-  {
-    lun: 8
-    name: '${VMName}-disk-log2'
-    createOption: 'Empty'
-    diskSizeGB: 256
-    managedDisk: {
-      storageAccountType: 'Premium_LRS'
-    }
-    writeAcceleratorEnabled: (contains('Standard_M', VMSize)) ? 'true' : 'false'
-  }
-  {
-    lun: 9
-    name: '${VMName}-disk-log3'
-    createOption: 'Empty'
-    diskSizeGB: 256
-    managedDisk: {
-      storageAccountType: 'Premium_LRS'
-    }
-    writeAcceleratorEnabled: (contains('Standard_M', VMSize)) ? 'true' : 'false'
+    writeAcceleratorEnabled: (contains(VMSize, 'Standard_M')) ? 'true' : 'false'
   }
 ]
 
@@ -532,7 +247,7 @@ resource hanavm 'Microsoft.Compute/virtualMachines@2020-06-01' = {
           storageAccountType: 'StandardSSD_LRS'
         }
       }
-      dataDisks: (contains(extrasmallVMs, VMSize)) ? extrasmallDisks : (contains(smallVMs, VMSize)) ? smallDisks : (contains(mediumVMs, VMSize)) ? mediumDisks : (contains(largeVMs, VMSize)) ? largeDisks : extralargeDisks
+      dataDisks: (contains(extrasmallVMs, VMSize)) ? extrasmallDisks : disks
     }
   }
 }
