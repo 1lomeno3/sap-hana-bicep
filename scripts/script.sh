@@ -35,6 +35,13 @@ function setEnv()
    
   #get the VM size via the instance api
   VMSIZE=`curl -H Metadata:true "http://169.254.169.254/metadata/instance/compute/vmSize?api-version=2017-08-01&format=text"`
+
+  extrasmallVMs=("Standard_DS14_v2" "Standard_E16s_v3" "Standard_E20ds_v4")
+  smallVMs=("Standard_M32ts" "Standard_E32s_v3" "Standard_M32ls")
+  mediumVMs=("Standard_E48ds_v4" "Standard_E64s_v3" "Standard_M64ls")
+  largeVMs=("Standard_M32dms_v2" "Standard_M64s")
+  extralargeVMs=("Standard_M64ms" "Standard_M128s" "Standard_M208s_v2" "Standard_M128ms")
+
 }
 
 function installPackages()
@@ -94,8 +101,7 @@ function createVolumes()
   pvcreate -ff -y /dev/disk/azure/scsi1/lun5
   pvcreate -ff -y /dev/disk/azure/scsi1/lun6
   pvcreate -ff -y /dev/disk/azure/scsi1/lun7
-  pvcreate -ff -y /dev/disk/azure/scsi1/lun8
-
+  
   #shared volume creation
   sharedvglun="/dev/disk/azure/scsi1/lun0"
   vgcreate sharedvg $sharedvglun
@@ -108,13 +114,37 @@ function createVolumes()
   lvcreate -l 100%FREE -n usrsaplv usrsapvg
   mkfs.xfs /dev/usrsapvg/usrsaplv
 
+  #backup volume creation
+  backupvglun="/dev/disk/azure/scsi1/lun2"
+  vgcreate backupvg $backupvglun
+  lvcreate -l 100%FREE -n backuplv backupvg 
+  mkfs.xfs /dev/backupvg/backuplv
 
-  if [ "$VMSIZE" == "Standard_E16s_v3" ] || [ "$VMSIZE" == "Standard_E32s_v3" ] || [ "$VMSIZE" == "Standard_E64s_v3" ] || [ "$VMSIZE" == "Standard_GS5" ] || [ "$VMSIZE" == "Standard_M32ts" ] || [ "$VMSIZE" == "Standard_M32ls" ] || [ "$VMSIZE" == "Standard_M64ls" ] || [ $VMSIZE == "Standard_DS14_v2" ] ; then
-    #backup volume creation
-    backupvglun="/dev/disk/azure/scsi1/lun2"
-    vgcreate backupvg $backupvglun
-    lvcreate -l 100%FREE -n backuplv backupvg 
 
+  if [  " ${extrasmallVMs[*]} " =~ " ${VMSIZE} " ] ; then
+    
+    #data volume creation
+    datavg1lun="/dev/disk/azure/scsi1/lun3"
+    datavg2lun="/dev/disk/azure/scsi1/lun4"
+    datavg3lun="/dev/disk/azure/scsi1/lun5"
+    vgcreate datavg $datavg1lun $datavg2lun $datavg3lun
+    PHYSVOLUMES=3
+    STRIPESIZE=256
+    lvcreate -i$PHYSVOLUMES -I$STRIPESIZE -l 100%FREE -n datalv datavg
+
+    #log volume creation
+    logvg1lun="/dev/disk/azure/scsi1/lun6"
+    logvg2lun="/dev/disk/azure/scsi1/lun7"
+    vgcreate logvg $logvg1lun $logvg2lun
+    PHYSVOLUMES=2
+    STRIPESIZE=64
+    lvcreate -i$PHYSVOLUMES -I$STRIPESIZE -l 100%FREE -n loglv logvg    
+
+  else
+
+    pvcreate -ff -y /dev/disk/azure/scsi1/lun8
+    pvcreate -ff -y /dev/disk/azure/scsi1/lun9
+  
     #data volume creation
     datavg1lun="/dev/disk/azure/scsi1/lun3"
     datavg2lun="/dev/disk/azure/scsi1/lun4"
@@ -122,108 +152,20 @@ function createVolumes()
     datavg4lun="/dev/disk/azure/scsi1/lun6"
     vgcreate datavg $datavg1lun $datavg2lun $datavg3lun $datavg4lun
     PHYSVOLUMES=4
-    STRIPESIZE=64
+    STRIPESIZE=256
     lvcreate -i$PHYSVOLUMES -I$STRIPESIZE -l 100%FREE -n datalv datavg
 
     #log volume creation
     logvg1lun="/dev/disk/azure/scsi1/lun7"
     logvg2lun="/dev/disk/azure/scsi1/lun8"
+    logvg3lun="/dev/disk/azure/scsi1/lun9"
     vgcreate logvg $logvg1lun $logvg2lun
-    PHYSVOLUMES=2
-    STRIPESIZE=32
-    lvcreate -i$PHYSVOLUMES -I$STRIPESIZE -l 100%FREE -n loglv logvg    
-
-  fi
-
-  if [ $VMSIZE == "Standard_M64s" ]; then
-    pvcreate -ff -y /dev/disk/azure/scsi1/lun9
-
-    #backup volume creation
-    backupvg1lun="/dev/disk/azure/scsi1/lun2"
-    backupvg2lun="/dev/disk/azure/scsi1/lun3"
-    vgcreate backupvg $backupvg1lun $backupvg2lun
-    lvcreate -l 100%FREE -n backuplv backupvg 
-
-    #data volume creation
-    datavg1lun="/dev/disk/azure/scsi1/lun4"
-    datavg2lun="/dev/disk/azure/scsi1/lun5"
-    datavg3lun="/dev/disk/azure/scsi1/lun6"
-    datavg4lun="/dev/disk/azure/scsi1/lun7"
-    vgcreate datavg $datavg1lun $datavg2lun $datavg3lun $datavg4lun
-    PHYSVOLUMES=4
-    STRIPESIZE=64
-    lvcreate -i$PHYSVOLUMES -I$STRIPESIZE -l 100%FREE -n datalv datavg
-
-    #log volume creation
-    logvg1lun="/dev/disk/azure/scsi1/lun8"
-    logvg2lun="/dev/disk/azure/scsi1/lun9"
-    vgcreate logvg $logvg1lun $logvg2lun
-    PHYSVOLUMES=2
-    STRIPESIZE=32
-    lvcreate -i$PHYSVOLUMES -I$STRIPESIZE -l 100%FREE -n loglv logvg
-    
-  fi
-
-  if [ $VMSIZE == "Standard_M64ms" ] || [ $VMSIZE == "Standard_M128s" ]; then
-
-    #backup volume creation
-    backupvg1lun="/dev/disk/azure/scsi1/lun2"
-    backupvg2lun="/dev/disk/azure/scsi1/lun3"
-    vgcreate backupvg $backupvg1lun $backupvg2lun
-    lvcreate -l 100%FREE -n backuplv backupvg 
-
-    #data volume creation
-    datavg1lun="/dev/disk/azure/scsi1/lun4"
-    datavg2lun="/dev/disk/azure/scsi1/lun5"
-    datavg3lun="/dev/disk/azure/scsi1/lun6"
-    vgcreate datavg $datavg1lun $datavg2lun $datavg3lun 
     PHYSVOLUMES=3
     STRIPESIZE=64
-    lvcreate -i$PHYSVOLUMES -I$STRIPESIZE -l 100%FREE -n datalv datavg
-
-    #log volume creation
-    logvg1lun="/dev/disk/azure/scsi1/lun7"
-    logvg2lun="/dev/disk/azure/scsi1/lun8"
-    vgcreate logvg $logvg1lun $logvg2lun
-    PHYSVOLUMES=2
-    STRIPESIZE=32
-    lvcreate -i$PHYSVOLUMES -I$STRIPESIZE -l 100%FREE -n loglv logvg
-
-  fi
-
-  if [ $VMSIZE == "Standard_M128ms" || [ $VMSIZE == "Standard_M208ms_v2" ]; then
-
-    pvcreate  -ff -y /dev/disk/azure/scsi1/lun9
-    pvcreate  -ff -y /dev/disk/azure/scsi1/lun10
-
-    #backup volume creation
-    backupvg1lun="/dev/disk/azure/scsi1/lun2"
-    backupvg2lun="/dev/disk/azure/scsi1/lun3"
-    vgcreate backupvg $backupvg1lun $backupvg2lun
-    lvcreate -l 100%FREE -n backuplv backupvg 
-
-    #data volume creation
-    datavg1lun="/dev/disk/azure/scsi1/lun4"
-    datavg2lun="/dev/disk/azure/scsi1/lun5"
-    datavg3lun="/dev/disk/azure/scsi1/lun6"
-    datavg4lun="/dev/disk/azure/scsi1/lun7"
-    datavg5lun="/dev/disk/azure/scsi1/lun8"
-    vgcreate datavg $datavg1lun $datavg2lun $datavg3lun $datavg4lun $datavg5lun
-    PHYSVOLUMES=4
-    STRIPESIZE=64
-    lvcreate -i$PHYSVOLUMES -I$STRIPESIZE -l 100%FREE -n datalv datavg
-
-    #log volume creation
-    logvg1lun="/dev/disk/azure/scsi1/lun9"
-    logvg2lun="/dev/disk/azure/scsi1/lun10"
-    vgcreate logvg $logvg1lun $logvg2lun
-    PHYSVOLUMES=2
-    STRIPESIZE=32
     lvcreate -i$PHYSVOLUMES -I$STRIPESIZE -l 100%FREE -n loglv logvg
 
   fi  
 
-  mkfs.xfs /dev/backupvg/backuplv
   mkfs.xfs /dev/datavg/datalv
   mkfs.xfs /dev/logvg/loglv
 
