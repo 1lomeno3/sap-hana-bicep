@@ -35,12 +35,13 @@ var largeVMs = [
   'Standard_M32dms_v2'
   'Standard_M64s'
 ]
+/*
 var extralargeVMs = [
   'Standard_M64ms'
   'Standard_M128s'
   'Standard_M208s_v2'
   'Standard_M128ms'
-]
+]*/
 
 var extrasmallDisks = [
   {
@@ -526,6 +527,7 @@ resource hanavm 'Microsoft.Compute/virtualMachines@2020-06-01' = {
       osDisk: {
         name: '${VMName}-disk-OS'
         createOption: 'FromImage'
+        diskSizeGB: 64
         managedDisk: {
           storageAccountType: 'StandardSSD_LRS'
         }
