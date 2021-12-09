@@ -1,5 +1,5 @@
 # SAP HANA Deployment via Bicep
-The repository is used to install SAP HANA on a single VM using the Bicep language. It is based on the [SAP-HANA-ARM repository](https://github.com/1lomeno3/SAP-HANA-ARM), which means that a similar logic is applied:
+The repository is used to install SAP HANA on a single VM using the Bicep language. It applies a similar logic as the [SAP-HANA-ARM repository](https://github.com/1lomeno3/SAP-HANA-ARM):
 1. infrastracture deployment with predefined SKUs and recommended disk layout
 2. custom script extension for the OS update and configuration of the VM
 3. installation of SAP HANA using SAP media located in the defined Storage Account
