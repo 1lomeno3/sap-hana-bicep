@@ -54,8 +54,8 @@ resource nic 'Microsoft.Network/networkInterfaces@2020-11-01' = {
         name: 'ipconfig1'
         properties: {
           privateIPAllocationMethod: 'Dynamic'
-          publicIPAddress: {
-            id: pip.id
+          publicIPAddress: (PublicIP != 'yes') ? null : {
+            id:  pip.id
           }
           subnet: {
             id: HANASubnetRef
