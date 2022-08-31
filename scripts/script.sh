@@ -36,11 +36,11 @@ function setEnv()
   #get the VM size via the instance api
   VMSIZE=`curl -H Metadata:true "http://169.254.169.254/metadata/instance/compute/vmSize?api-version=2017-08-01&format=text"`
 
-  extrasmallVMs=("Standard_DS14_v2" "Standard_E16s_v3" "Standard_E20ds_v4")
-  smallVMs=("Standard_M32ts" "Standard_E32s_v3" "Standard_M32ls")
-  mediumVMs=("Standard_E48ds_v4" "Standard_E64s_v3" "Standard_M64ls")
-  largeVMs=("Standard_M32dms_v2" "Standard_M64s")
-  extralargeVMs=("Standard_M64ms" "Standard_M128s" "Standard_M208s_v2" "Standard_M128ms")
+  extrasmallVMs=("Standard_DS14_v2" "Standard_E16ds_v5" "Standard_E20ds_v5")
+  smallVMs=("Standard_M32ts" "Standard_E32ds_v5" "Standard_M32ls")
+  mediumVMs=("Standard_E48ds_v5" "Standard_E64ds_v5" "Standard_M64ls")
+  largeVMs=("Standard_M32dms_v2" "Standard_M64ds_v2")
+  extralargeVMs=("Standard_M64dms_v2" "Standard_M128ds_v2" "Standard_M208s_v2" "Standard_M128dms_v2")
 
 }
 
