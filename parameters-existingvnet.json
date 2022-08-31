@@ -12,7 +12,7 @@
             "value": "hanavm"
         },
         "VMType": {
-            "value": "Standard_E32s_v3 (256 GB)"
+            "value": "Standard_E32ds_v5 (256 GB)"
         },
         "ExistingNetworkRG": {
             "value": "SharedRG"
@@ -24,7 +24,7 @@
             "value": "admin"
         },
         "OperatingSystem": {
-            "value":  "SLES for SAP 15 SP2"
+            "value":  "SLES for SAP 15 SP3"
         }
     }
 }
