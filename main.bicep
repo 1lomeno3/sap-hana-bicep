@@ -26,22 +26,22 @@ param VMName string = 'hanavm'
 
 @allowed([
   'Standard_DS14_v2 (112 GB, for B1)'
-  'Standard_E16s_v3 (128 GB)'
-  'Standard_E20ds_v4 (160 GB)'
+  'Standard_E16ds_v5 (128 GB)'
+  'Standard_E20ds_v5 (160 GB)'
   'Standard_M32ts (192 GB)'
-  'Standard_E32s_v3 (256 GB)'
+  'Standard_E32ds_v5 (256 GB)'
   'Standard_M32ls (256 GB)'
-  'Standard_E48ds_v4 (384 GB)'
-  'Standard_E64s_v3 (432 GB)'
+  'Standard_E48ds_v5 (384 GB)'
+  'Standard_E64ds_v5 (512 GB)'
   'Standard_M64ls (512 GB)'
   'Standard_M32dms_v2 (875 GB)'
-  'Standard_M64s (1 TB)'
-  'Standard_M64ms (1.7 TB)'
-  'Standard_M128s (2 TB)'
+  'Standard_M64ds_v2 (1 TB)'
+  'Standard_M64dms_v2 (1.7 TB)'
+  'Standard_M128ds_v2 (2 TB)'
   'Standard_M208s_v2 (3 TB)'
-  'Standard_M128ms (4 TB)'
+  'Standard_M128dms_v2 (4 TB)'
 ])
-param VMType string = 'Standard_E32s_v3 (256 GB)'
+param VMType string = 'Standard_E32ds_v5 (256 GB)'
 
 @description('Type in the name of the Resource Group for an existing network or leave no to create new one')
 param ExistingNetworkRG string = 'no'
@@ -75,10 +75,10 @@ param VMPassword string
 
 @allowed([
   'SLES for SAP 12 SP5'
-  'SLES for SAP 15 SP2'
+  'SLES for SAP 15 SP3'
   'RHEL for SAP 8.2 - not working yet'
 ])
-param OperatingSystem string = 'SLES for SAP 15 SP2'
+param OperatingSystem string = 'SLES for SAP 15 SP3'
 
 
 // variables
