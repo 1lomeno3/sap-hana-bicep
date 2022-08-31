@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "HANAVersion": {
-            "value": "2.0 SPS05 REV60"
+            "value": "60"
         },
         "HANASID": {
             "value":  "AZR"
