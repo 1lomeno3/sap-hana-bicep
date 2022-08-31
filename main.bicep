@@ -3,15 +3,10 @@ targetScope='subscription'
 param resourceGroupName string = 'HANABicepRG'
 param resourceGroupLocation string = 'westeurope'
 
-@allowed([
-  '2.0 SPS01 REV10 (51052030)'
-  '2.0 SPS02 REV20 (51052325)'
-  '2.0 SPS03 REV30 (51053061)'
-  '2.0 SPS04 REV40 (51053787)'
-  '2.0 SPS05 REV56'
-  '2.0 SPS06 REV60'
-])
-param HANAVersion string = '2.0 SPS06 REV60'
+@description('Type in the SAP HANA revision number, e.g. for HANA 2.0 REV64 => 64')
+@minLength(2)
+@maxLength(2)
+param HANAVersion string = '64'
 
 @minLength(3)
 @maxLength(3)

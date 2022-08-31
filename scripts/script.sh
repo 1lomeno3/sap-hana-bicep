@@ -23,14 +23,14 @@ function log()
 
 function setEnv()
 {
-  #decode hana version parameter
-  HANAVER=${HANAVER^^}
-  if [ "${HANAVER}" = "2.0 SPS01 REV10 (51052030)" ]; then hanapackage="51052030"; fi
-  if [ "${HANAVER}" = "2.0 SPS02 REV20 (51052325)" ]; then hanapackage="51052325"; fi
-  if [ "${HANAVER}" = "2.0 SPS03 REV30 (51053061)" ]; then hanapackage="51053061"; fi
-  if [ "${HANAVER}" = "2.0 SPS04 REV40 (51053787)" ]; then hanapackage="51053787"; fi
-  if [ "${HANAVER}" = "2.0 SPS05 REV56" ]; then hanapackage="56"; fi
-  if [ "${HANAVER}" = "2.0 SPS06 REV60" ]; then hanapackage="60"; fi
+  #decode hana version parameter - not needed anymore
+  hanapackage=${HANAVER^^}
+  #if [ "${HANAVER}" = "2.0 SPS01 REV10 (51052030)" ]; then hanapackage="51052030"; fi
+  #if [ "${HANAVER}" = "2.0 SPS02 REV20 (51052325)" ]; then hanapackage="51052325"; fi
+  #if [ "${HANAVER}" = "2.0 SPS03 REV30 (51053061)" ]; then hanapackage="51053061"; fi
+  #if [ "${HANAVER}" = "2.0 SPS04 REV40 (51053787)" ]; then hanapackage="51053787"; fi
+  #if [ "${HANAVER}" = "2.0 SPS05 REV56" ]; then hanapackage="56"; fi
+  #if [ "${HANAVER}" = "2.0 SPS06 REV60" ]; then hanapackage="60"; fi
 
    
   #get the VM size via the instance api
@@ -198,28 +198,23 @@ function prepareSAPBins()
   mkdir ${hanapackage}
   cd ${hanapackage}
 
-  if [ "${hanapackage}" = "51053787" ]
-  then 
-    /usr/bin/wget -o ${hanapackage}.ZIP --quiet $Uri/${hanapackage}.ZIP${sas}
-    unzip ${hanapackage}.ZIP  
-  else
-    if [ "${hanapackage}" = "56" ] || [ "${hanapackage}" = "60" ]
-    then
-      /usr/bin/wget -O SAPCAR --quiet $Uri/SAPCAR${sas}
-      /usr/bin/wget -O IMDB_SERVER20_0${hanapackage}_0-80002031.SAR --quiet $Uri/IMDB_SERVER20_0${hanapackage}_0-80002031.SAR${sas}
+  # not needed - used for hana installation pckg
+  
+  #if [ "${hanapackage}" = "51053787" ]
+  #then 
+  #  /usr/bin/wget -o ${hanapackage}.ZIP --quiet $Uri/${hanapackage}.ZIP${sas}
+  #  unzip ${hanapackage}.ZIP  
+  #else
+  #  if [ "${hanapackage}" = "56" ] || [ "${hanapackage}" = "60" ]
+  #  then
 
-      chmod 777 SAPCAR
-      ./SAPCAR -xvf IMDB_SERVER20_0${hanapackage}_0-80002031.SAR
-      ./SAPCAR -xvf IMDB_SERVER20_0${hanapackage}_0-80002031.SAR SIGNATURE.SMF -manifest SIGNATURE.SMF
-    else
-      /usr/bin/wget -O ${hanapackage}_part1.exe --quiet $Uri/${hanapackage}_part1.exe${sas}
-      /usr/bin/wget -O ${hanapackage}_part2.rar --quiet $Uri/${hanapackage}_part2.rar${sas}
-      /usr/bin/wget -O ${hanapackage}_part2.rar --quiet $Uri/${hanapackage}_part3.rar${sas}
-      /usr/bin/wget -O ${hanapackage}_part2.rar --quiet $Uri/${hanapackage}_part4.rar${sas}
-      unrar  -o- x ${hanapackage}_part1.exe
-    fi
-  fi
+  /usr/bin/wget -O SAPCAR --quiet $Uri/SAPCAR${sas}
+  /usr/bin/wget -O IMDB_SERVER20_0${hanapackage}_0-80002031.SAR --quiet $Uri/IMDB_SERVER20_0${hanapackage}_0-80002031.SAR${sas}
 
+  chmod 777 SAPCAR
+  ./SAPCAR -xvf IMDB_SERVER20_0${hanapackage}_0-80002031.SAR
+  ./SAPCAR -xvf IMDB_SERVER20_0${hanapackage}_0-80002031.SAR SIGNATURE.SMF -manifest SIGNATURE.SMF
+  
   log "prepareSAPBins done"
 }
 
@@ -245,12 +240,14 @@ function installHANA()
   
   echo $VMIPADDR $VMNAME >> /etc/hosts
   
-  if [ "${hanapackage}" = "56" ] || [ "${hanapackage}" = "60" ]
-  then
-    /hana/data/sapbits/${hanapackage}/SAP_HANA_DATABASE/hdblcm -b --configfile /hana/data/sapbits/hdbinst-local.cfg
-  else
-    /hana/data/sapbits/${hanapackage}/DATA_UNITS/HDB_LCM_LINUX_X86_64/hdblcm -b --configfile /hana/data/sapbits/hdbinst-local.cfg
-  fi
+  #if [ "${hanapackage}" = "56" ] || [ "${hanapackage}" = "60" ]
+  #then
+  
+  /hana/data/sapbits/${hanapackage}/SAP_HANA_DATABASE/hdblcm -b --configfile /hana/data/sapbits/hdbinst-local.cfg
+  
+  #else
+  #  /hana/data/sapbits/${hanapackage}/DATA_UNITS/HDB_LCM_LINUX_X86_64/hdblcm -b --configfile /hana/data/sapbits/hdbinst-local.cfg
+  #fi
 
   log "installHANA done"
 }
